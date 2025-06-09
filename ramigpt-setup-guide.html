@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuração RamiGPT - Guia Completo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(30, 30, 50, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '⚠️';
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 2em;
+            opacity: 0.8;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .warning {
+            background: linear-gradient(135deg, #ff9500 0%, #ff6b35 100%);
+            color: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #ff4757;
+            font-weight: bold;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #1a1a2e;
+            border-bottom: 3px solid #333;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #888;
+            transition: all 0.3s ease;
+            position: relative;
+            font-family: inherit;
+        }
+        
+        .tab-button:hover {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+        }
+        
+        .tab-button.active {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #ff6b6b;
+        }
+        
+        .tab-content {
+            padding: 30px;
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .step-card {
+            background: linear-gradient(135deg, #2c2c54 0%, #40407a 100%);
+            border: 1px solid #444;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.1);
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+        
+        .step-title {
+            color: #ff6b6b;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .code-block {
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            color: #00ff41;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: '$ ';
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            opacity: 1;
+        }
+        
+        .file-content {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+            color: #e0e0e0;
+            position: relative;
+        }
+        
+        .file-header {
+            background: #333;
+            color: #ff6b6b;
+            padding: 8px 15px;
+            margin: -20px -20px 15px -20px;
+            border-radius: 10px 10px 0 0;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .requirement-list {
+            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .requirement-list ul {
+            list-style: none;
+        }
+        
+        .requirement-list li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .requirement-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00b894;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .feature-card h4 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .usage-example {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            color: white;
+        }
+        
+        .usage-example h4 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .important-note {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #ff7675;
+        }
+        
+        .success-indicator {
+            background: #00b894;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin: 10px 0;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .method-selector {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .method-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .method-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .method-btn.active {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+        
+        .method-content {
+            display: none;
+        }
+        
+        .method-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔴 RamiGPT Setup</h1>
+            <p>Autonomous Privilege Escalation usando IA</p>
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ AVISO IMPORTANTE:</strong> RamiGPT é uma ferramenta de segurança ofensiva. Use APENAS em sistemas que você tem permissão explícita para testar. Uso em sistemas não autorizados é ILEGAL.
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="tab-button active" onclick="showTab('prereq')">Pré-requisitos</button>
+            <button class="tab-button" onclick="showTab('install')">Instalação</button>
+            <button class="tab-button" onclick="showTab('config')">Configuração</button>
+            <button class="tab-button" onclick="showTab('usage')">Como Usar</button>
+        </div>
+        
+        <div id="prereq" class="tab-content active">
+            <h2>📋 Pré-requisitos</h2>
+            
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    Chave da OpenAI API
+                </div>
+                <p>RamiGPT precisa de uma chave da OpenAI para funcionar. Você vai precisar de créditos na sua conta.</p>
+                
+                <div class="requirement-list">
+                    <h4>Passos para obter a chave:</h4>
+                    <ul>
+                        <li>Crie conta em <a href="https://openai.com" target="_blank" style="color: #ff6b6b;">openai.com</a></li>
+                        <li>Vá para API section e aplique para acesso</li>
+                        <li>Adicione método de pagamento (necessário para usar a API)</li>
+                        <li>Gere sua chave API em API Keys</li>
+                        <li>Guarde a chave com segurança - ela não aparece novamente!</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    Ferramentas Necessárias
+                </div>
+                
+                <div class="method-selector">
+                    <button class="method-btn active" onclick="showMethod('docker')">🐳 Com Docker</button>
+                    <button class="method-btn" onclick="showMethod('local')">🐍 Instalação Local</button>
+                </div>
+                
+                <div id="docker" class="method-content active">
+                    <div class="requirement-list">
+                        <h4>Você vai precisar de:</h4>
+                        <ul>
+                            <li>Docker instalado</li>
+                            <li>Docker Compose instalado</li>
+                            <li>Git para clonar o repositório</li>
+                            <li>Chave da OpenAI API</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="local" class="method-content">
+                    <div class="requirement-list">
+                        <h4>Você vai precisar de:</h4>
+                        <ul>
+                            <li>Python 3.8+ instalado</li>
+                            <li>pip (gerenciador de pacotes Python)</li>
+                            <li>Git para clonar o repositório</li>
+                            <li>Chave da OpenAI API</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <h4>🎯 Para que serve o RamiGPT?</h4>
+                <p>RamiGPT é uma ferramenta que automatiza escalação de privilégios em sistemas Linux/Windows usando IA. Ela integra ferramentas como LinPEAS e BeRoot, analisando os resultados e sugerindo exploits automaticamente.</p>
+            </div>
+        </div>
+        
+        <div id="install" class="tab-content">
+            <h2>🚀 Instalação</h2>
+            
+            <div class="method-selector">
+                <button class="method-btn active" onclick="showInstallMethod('docker-install')">🐳 Docker (Recomendado)</button>
+                <button class="method-btn" onclick="showInstallMethod('local-install')">🐍 Local</button>
+            </div>
+            
+            <div id="docker-install" class="method-content active">
+                <div class="step-card">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Clone o Repositório
+                    </div>
+                    <div class="code-block">
+                        git clone https://github.com/M507/RamiGPT.git
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        Entre no Diretório
+                    </div>
+                    <div class="code-block">
+                        cd RamiGPT
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        Inicie com Docker
+                    </div>
+                    <div class="code-block">
+                        docker compose up -d
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    </div>
+                    <p>O comando <code>-d</code> roda em background. Remova se quiser ver os logs.</p>
+                </div>
+                
+                <div class="success-indicator">
+                    ✅ Aplicação rodando em: https://127.0.0.1:5000
+                </div>
+            </div>
+            
+            <div id="local-install" class="method-content">
+                <div class="step-card">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Clone o Repositório
+                    </div>
+                    <div class="code-block">
+                        git clone https://github.com/M507/RamiGPT.git
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        Entre no Diretório
+                    </div>
+                    <div class="code-block">
+                        cd RamiGPT
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        Gere Certificados SSL
+                    </div>
+                    <div class="code-block">
+                        chmod +x ./generate_certs.sh<br>
+                        ./generate_certs.sh
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-title">
+                        <span class="step-number">4</span>
+                        Instale Dependências
+                    </div>
+                    <div class="code-block">
+                        pip3 install -r requirements.txt
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-title">
+                        <span class="step-number">5</span>
+                        Execute a Aplicação
+                    </div>
+                    <div class="code-block">
+                        python3 app.py
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    </div>
+                </div>
+                
+                <div class="success-indicator">
+                    ✅ Aplicação rodando em: https://127.0.0.1:5000
+                </div>
+            </div>
+        </div>
+        
+        <div id="config" class="tab-content">
+            <h2>⚙️ Configuração</h2>
+            
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    Configure a Chave da OpenAI
+                </div>
+                <p>Primeiro, copie o arquivo de exemplo:</p>
+                <div class="code-block">
+                    cp .env.example .env
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+                
+                <p>Depois edite o arquivo <code>.env</code>:</p>
+                <div class="file-content">
+                    <div class="file-header">📄 .env</div>
+                    OPENAI_API_KEY=sua_chave_aqui
+                </div>
+                
+                <div class="important-note">
+                    <strong>🔑 Importante:</strong> Substitua <code>sua_chave_aqui</code> pela sua chave real da OpenAI. Mantenha este arquivo seguro e nunca compartilhe sua chave!
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    Verificar se está Funcionando
+                </div>
+                <p>Abra seu navegador e vá para:</p>
+                <div class="code-block">
+                    https://127.0.0.1:5000
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+                
+                <p>Você pode ver um aviso de certificado SSL - isso é normal em desenvolvimento local. Clique em "Avançado" e prossiga.</p>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🔍 LinPEAS Integration</h4>
+                    <p>Auditoria automática de sistemas Linux para identificar vetores de escalação de privilégios</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🪟 BeRoot Integration</h4>
+                    <p>Identificação de vetores comuns de escalação de privilégios em ambientes Windows</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h4>🤖 AI Analysis</h4>
+                    <p>Análise inteligente dos resultados usando GPT para sugerir exploits específicos</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="usage" class="tab-content">
+            <h2>🎮 Como Usar</h2>
+            
+            <div class="usage-example">
+                <h4>💡 Exemplo Básico: Capturar uma Flag</h4>
+                <p>1. Acesse a interface web em <code>https://127.0.0.1:5000</code></p>
+                <p>2. Execute comandos de reconhecimento:</p>
+                <div class="code-block">
+                    find / -name "flag*" 2>/dev/null
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+                <p>3. O RamiGPT vai analisar os resultados e sugerir próximos passos automaticamente</p>
+            </div>
+            
+            <div class="usage-example">
+                <h4>🔧 Exemplo: Usar BeRoot</h4>
+                <p>Para sistemas Windows, você pode executar BeRoot e alimentar os resultados para a IA:</p>
+                <div class="code-block">
+                    # Execute BeRoot no sistema alvo<br>
+                    # Cole os resultados na interface RamiGPT<br>
+                    # A IA vai analisar e sugerir exploits
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    Fluxo de Trabalho Típico
+                </div>
+                <div class="requirement-list">
+                    <ul>
+                        <li>Acesse o sistema alvo com credenciais limitadas</li>
+                        <li>Execute ferramentas de enumeração (LinPEAS/BeRoot)</li>
+                        <li>Cole os resultados na interface RamiGPT</li>
+                        <li>Analise as sugestões da IA</li>
+                        <li>Execute os exploits sugeridos</li>
+                        <li>Obtenha acesso root/admin</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <h4>⚖️ Uso Ético e Legal</h4>
+                <p><strong>RamiGPT deve ser usado APENAS para:</strong></p>
+                <ul style="margin-top: 10px;">
+                    <li>• Testes de penetração autorizados</li>
+                    <li>• CTFs e laboratórios de aprendizado</li>
+                    <li>• Auditoria de segurança em sistemas próprios</li>
+                    <li>• Pesquisa acadêmica com permissão</li>
+                </ul>
+                <br>
+                <p><strong>NUNCA use em sistemas sem permissão explícita!</strong></p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    Dicas de Performance
+                </div>
+                <div class="requirement-list">
+                    <ul>
+                        <li>Use descrições claras do ambiente alvo</li>
+                        <li>Forneça resultados completos das ferramentas</li>
+                        <li>Seja específico sobre seus objetivos</li>
+                        <li>Teste sugestões em ambiente controlado primeiro</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+        
+        function showMethod(methodName) {
+            // Hide all method contents
+            document.querySelectorAll('.method-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all method buttons
+            document.querySelectorAll('.method-btn').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected method
+            document.getElementById(methodName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+        
+        function showInstallMethod(methodName) {
+            // Hide all install method contents
+            document.querySelectorAll('#install .method-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all install method buttons
+            document.querySelectorAll('#install .method-btn').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected method
+            document.getElementById(methodName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+        
+        function copyCode(button) {
+            const codeBlock = button.parentElement;
+            const code = codeBlock.textContent.replace('Copiar', '').replace('$ ', '').trim();
+            
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = 'Copiado!';
+                button.style.background = '#00b894';
+                
+                setTimeout(() => {
+                    button.textContent = 'Copiar';
+                    button.style.background = '#ff6b6b';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
